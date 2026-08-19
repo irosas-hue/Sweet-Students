@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="PROYECTO ROY.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="447"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title=".Navegables" custom_title="0" dock_id="1" table="0,10:Navegables"/><dock_state state="000000ff00000000fd00000001000000020000035700000256fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000003570000011e00ffffff000002690000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1*">-- =========================================================
+--  Base de datos: Sweet Students (versión SQLite)
+--  Repostería escolar - esquema para la página web
+-- =========================================================
+
+PRAGMA foreign_keys = ON;
+
+-- ---------------------------------------------------------
+-- Tabla: categorias
+-- ---------------------------------------------------------
+CREATE TABLE categorias (
+    id_categoria    INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre          TEXT NOT NULL,
+    descripcion     TEXT,
+    creado_en       TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ---------------------------------------------------------
+-- Tabla: productos
+-- ---------------------------------------------------------
+CREATE TABLE productos (
+    id_producto     INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_categoria    INTEGER NOT NULL,
+    nombre          TEXT NOT NULL,
+    descripcion     TEXT,
+    precio          REAL NOT NULL,      -- precio en colones (CRC)
+    imagen_url      TEXT,
+    disponible      INTEGER DEFAULT 1,  -- 1 = true, 0 = false
+    creado_en       TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria) ON DELETE CASCADE
+);
+
+-- ---------------------------------------------------------
+-- Tabla: sabores
+-- ---------------------------------------------------------
+CREATE TABLE sabores (
+    id_sabor        INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_producto     INTEGER NOT NULL,
+    nombre          TEXT NOT NULL,
+    FOREIGN KEY (id_producto) REFERENCES productos(id_producto) ON DELETE CASCADE
+);
+
+-- ---------------------------------------------------------
+-- Tabla: clientes
+-- ---------------------------------------------------------
+CREATE TABLE clientes (
+    id_cliente      INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre          TEXT NOT NULL,
+    telefono        TEXT NOT NULL,
+    colegio         TEXT,
+    creado_en       TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ---------------------------------------------------------
+-- Tabla: pedidos
+-- ---------------------------------------------------------
+CREATE TABLE pedidos (
+    id_pedido       INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_cliente      INTEGER,
+    fecha_pedido    TEXT DEFAULT CURRENT_TIMESTAMP,
+    estado          TEXT CHECK(estado IN ('pendiente','confirmado','entregado','cancelado')) DEFAULT 'pendiente',
+    total           REAL NOT NULL DEFAULT 0,
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente) ON DELETE SET NULL
+);
+
+-- ---------------------------------------------------------
+-- Tabla: pedido_detalle
+-- ---------------------------------------------------------
+CREATE TABLE pedido_detalle (
+    id_detalle      INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_pedido       INTEGER NOT NULL,
+    id_producto     INTEGER NOT NULL,
+    id_sabor        INTEGER,
+    cantidad        INTEGER NOT NULL DEFAULT 1,
+    precio_unitario REAL NOT NULL,
+    subtotal        REAL GENERATED ALWAYS AS (cantidad * precio_unitario) STORED,
+    FOREIGN KEY (id_pedido)   REFERENCES pedidos(id_pedido)   ON DELETE CASCADE,
+    FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
+    FOREIGN KEY (id_sabor)    REFERENCES sabores(id_sabor)
+);
+
+-- =========================================================
+--  Datos de ejemplo (coinciden con la página web actual)
+-- =========================================================
+
+INSERT INTO categorias (nombre, descripcion) VALUES
+('Queques', 'Queques suaves y esponjosos, horneados el mismo día'),
+('Galletas', 'Galletas crocantes por fuera y suaves por dentro'),
+('Muffins', 'Muffins caseros en porciones individuales'),
+('Rollos de Canela', 'Rollos suaves bañados en glaseado de vainilla'),
+('Cupcakes', 'Cupcakes decorados a mano'),
+('Brownies', 'Brownies húmedos con mucho chocolate');
+
+INSERT INTO productos (id_categoria, nombre, descripcion, precio) VALUES
+(1, 'Queque', 'Queque personalizado para meriendas y cumpleaños escolares', 2500.00),
+(2, 'Galletas', 'Galletas individuales', 800.00),
+(3, 'Muffin', 'Muffin individual', 1500.00),
+(4, 'Rollo de Canela', 'Rollo individual', 2000.00),
+(5, 'Cupcake', 'Cupcake decorado', 1800.00),
+(6, 'Brownie', 'Brownie individual', 1700.00);
+
+INSERT INTO sabores (id_producto, nombre) VALUES
+(1, 'Vainilla clásico'),
+(1, 'Chocolate'),
+(1, 'Marmoleado'),
+(1, 'Naranja y canela'),
+(2, 'Chispas de chocolate'),
+(2, 'Avena y pasas'),
+(2, 'Mantequilla de maní'),
+(2, 'Doble chocolate'),
+(3, 'Arándanos'),
+(3, 'Chocolate'),
+(3, 'Banano y nuez'),
+(3, 'Zanahoria'),
+(4, 'Tamaño individual'),
+(4, 'Tamaño mediano'),
+(4, 'Bandeja compartida (6 uds)'),
+(5, 'Vainilla con frosting de fresa'),
+(5, 'Chocolate con frosting de vainilla'),
+(5, 'Red velvet'),
+(6, 'Clásico'),
+(6, 'Con nueces'),
+(6, 'Con chispas blancas');
+
+-- ---------------------------------------------------------
+-- Ejemplo de un pedido (simula un carrito confirmado)
+-- ---------------------------------------------------------
+INSERT INTO clientes (nombre, telefono, colegio) VALUES
+('María Fernández', '8888-1234', 'Colegio San Rafael');
+
+INSERT INTO pedidos (id_cliente, estado, total) VALUES
+(1, 'confirmado', 4300.00);
+
+INSERT INTO pedido_detalle (id_pedido, id_producto, id_sabor, cantidad, precio_unitario) VALUES
+(1, 1, 2, 1, 2500.00),
+(1, 2, 5, 2, 800.00);
+
+-- =========================================================
+--  Consultas de ejemplo útiles para la página web
+-- =========================================================
+
+-- Ver todos los productos con su categoría
+-- SELECT p.nombre AS producto, c.nombre AS categoria, p.precio
+-- FROM productos p JOIN categorias c ON p.id_categoria = c.id_categoria;
+
+-- Ver los sabores de un producto específico (ej. Queque)
+-- SELECT nombre FROM sabores WHERE id_producto = 1;
+
+-- Ver el detalle completo de un pedido
+-- SELECT pr.nombre, s.nombre AS sabor, d.cantidad, d.precio_unitario, d.subtotal
+-- FROM pedido_detalle d
+-- JOIN productos pr ON d.id_producto = pr.id_producto
+-- LEFT JOIN sabores s ON d.id_sabor = s.id_sabor
+-- WHERE d.id_pedido = 1;
+
+-- Total de ventas por categoría
+-- SELECT c.nombre, SUM(d.subtotal) AS total_vendido
+-- FROM pedido_detalle d
+-- JOIN productos p ON d.id_producto = p.id_producto
+-- JOIN categorias c ON p.id_categoria = c.id_categoria
+-- GROUP BY c.nombre;
+
+SELECT*FROM categorias
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
