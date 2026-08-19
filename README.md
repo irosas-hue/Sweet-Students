@@ -11,8 +11,7 @@ Sweet Students. Elaboramos deliciosos postres personalizados para estudiantes, a
 
 Lista de programas o herramientas que la persona necesita tener instaladas antes de ejecutar tu proyecto:
 
-* [Python 3.x](https://www.python.org/) / Node.js v18+ / etc.
-* Git
+* VisualStudio
 
 ## 🛠️ Instalación y Ejecución
 
