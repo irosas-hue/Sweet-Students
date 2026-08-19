@@ -20,5 +20,5 @@ Instrucciones paso a paso para clonar el repositorio y ejecutar el proyecto en l
 
 1. **Clonar el repositorio:**
    ```bash
-   [git clone [https://github.com/tu-usuario/nombre-de-tu-repositorio.git](https://github.com/tu-usuario/nombre-de-tu-repositorio.git)](https://github.com/irosas-hue/Sweet-Students)
+   [git clone [https://github.com/irosas-hue/Sweet-Students.git]
 # Sweet-Students
