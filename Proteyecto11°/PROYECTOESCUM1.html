@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sweet Students | Repostería Escolar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --frosting: #ff8fab;
+    --frosting-light: #ffb6c1;
+    --frosting-deep: #d63384;
+    --cream: #fff8f2;
+    --cream-2: #fdece1;
+    --cocoa: #6b4226;
+    --cocoa-light: #a9704f;
+    --gold: #e0a458;
+    --mint: #bfe3d0;
+    --shadow: 0 10px 30px rgba(214, 51, 132, 0.12);
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+    font-family:'Poppins', sans-serif;
+    background:
+        radial-gradient(circle at 15% 10%, rgba(255,182,193,0.15), transparent 40%),
+        radial-gradient(circle at 85% 30%, rgba(191,227,208,0.15), transparent 40%),
+        var(--cream);
+    color:var(--cocoa);
+    overflow-x:hidden;
+}
+
+/* ---------- Decoraciones flotantes ---------- */
+.sprinkle{
+    position:fixed;
+    font-size:22px;
+    opacity:0.35;
+    pointer-events:none;
+    animation:float-sprinkle 9s ease-in-out infinite;
+    z-index:0;
+}
+@keyframes float-sprinkle{
+    0%,100%{ transform:translateY(0) rotate(0deg); }
+    50%{ transform:translateY(-25px) rotate(15deg); }
+}
+
+/* ---------- Header ---------- */
+header{
+    background:linear-gradient(135deg, var(--frosting-light), var(--frosting) 70%);
+    text-align:center;
+    padding:60px 20px 70px;
+    position:relative;
+    overflow:hidden;
+    border-radius:0 0 40% 40% / 0 0 60px 60px;
+}
+
+header::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.25) 0, transparent 8%),
+        radial-gradient(circle at 70% 60%, rgba(255,255,255,0.2) 0, transparent 6%),
+        radial-gradient(circle at 40% 80%, rgba(255,255,255,0.25) 0, transparent 5%);
+}
+
+header h1{
+    font-family:'Fredoka', sans-serif;
+    color:white;
+    font-size:clamp(2.4rem, 6vw, 3.6rem);
+    text-shadow:0 4px 12px rgba(0,0,0,0.08);
+    animation:pop-in 0.8s ease;
+    position:relative;
+}
+
+header p{
+    color:white;
+    margin-top:12px;
+    font-size:1.1rem;
+    font-weight:300;
+    animation:pop-in 1s ease;
+    position:relative;
+}
+
+@keyframes pop-in{
+    from{ opacity:0; transform:translateY(-16px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+/* ---------- Menú ---------- */
+nav{
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(8px);
+    text-align:center;
+    padding:14px;
+    position:sticky;
+    top:0;
+    z-index:900;
+    box-shadow:0 2px 12px rgba(0,0,0,0.06);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+nav a{
+    color:var(--frosting-deep);
+    text-decoration:none;
+    margin:0 14px;
+    font-weight:600;
+    font-size:0.95rem;
+    position:relative;
+    transition:color 0.3s ease;
+}
+
+nav a::after{
+    content:"";
+    position:absolute;
+    left:0; bottom:-4px;
+    width:0%;
+    height:2px;
+    background:var(--frosting-deep);
+    transition:width 0.3s ease;
+}
+
+nav a:hover{ color:var(--cocoa); }
+nav a:hover::after{ width:100%; }
+
+/* ---------- Carrito flotante ---------- */
+.cart-toggle{
+    position:fixed;
+    bottom:26px;
+    right:26px;
+    background:var(--frosting-deep);
+    color:white;
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:26px;
+    box-shadow:0 8px 20px rgba(214,51,132,0.35);
+    cursor:pointer;
+    z-index:1000;
+    border:none;
+    animation:pulse-cart 2.4s ease-in-out infinite;
+    transition:transform 0.25s ease;
+}
+.cart-toggle:hover{ transform:scale(1.08); }
+
+@keyframes pulse-cart{
+    0%,100%{ box-shadow:0 8px 20px rgba(214,51,132,0.35); }
+    50%{ box-shadow:0 8px 28px rgba(214,51,132,0.55); }
+}
+
+.cart-badge{
+    position:absolute;
+    top:-4px; right:-4px;
+    background:var(--gold);
+    color:white;
+    font-size:12px;
+    font-weight:700;
+    width:22px; height:22px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    border:2px solid white;
+}
+
+.cart-panel{
+    position:fixed;
+    top:0; right:-380px;
+    width:340px;
+    max-width:88vw;
+    height:100%;
+    background:white;
+    box-shadow:-6px 0 30px rgba(0,0,0,0.15);
+    z-index:1100;
+    transition:right 0.4s cubic-bezier(.25,.8,.25,1);
+    display:flex;
+    flex-direction:column;
+    padding:24px 20px;
+}
+.cart-panel.open{ right:0; }
+
+.cart-panel h3{
+    font-family:'Fredoka', sans-serif;
+    color:var(--frosting-deep);
+    margin-bottom:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.cart-close{
+    background:none; border:none; font-size:22px; cursor:pointer; color:var(--cocoa);
+}
+
+#cart-items{
+    flex:1;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    padding-right:4px;
+}
+
+.cart-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:var(--cream-2);
+    border-radius:10px;
+    padding:10px 12px;
+    animation:pop-in 0.3s ease;
+}
+
+.cart-item-info{ font-size:0.9rem; }
+.cart-item-controls{ display:flex; align-items:center; gap:8px; }
+.cart-item-controls button{
+    width:24px; height:24px;
+    border:none;
+    background:var(--frosting-light);
+    color:white;
+    border-radius:50%;
+    cursor:pointer;
+    font-weight:700;
+}
+
+.cart-empty{ text-align:center; color:#999; margin-top:40px; font-size:0.95rem; }
+
+.cart-total{
+    border-top:2px dashed var(--frosting-light);
+    padding-top:14px;
+    margin-top:14px;
+    font-weight:600;
+    display:flex;
+    justify-content:space-between;
+}
+
+.cart-checkout{
+    margin-top:14px;
+    background:#25D366;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:10px;
+    font-weight:700;
+    cursor:pointer;
+    transition:transform 0.25s ease;
+}
+.cart-checkout:hover{ transform:scale(1.03); }
+.cart-checkout:disabled{ opacity:0.5; cursor:not-allowed; transform:none; }
+
+.overlay{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.3);
+    z-index:1050;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.3s ease;
+}
+.overlay.show{ opacity:1; pointer-events:auto; }
+
+/* ---------- Secciones ---------- */
+section{
+    padding:60px 20px;
+    position:relative;
+    z-index:1;
+}
+
+.reveal{
+    opacity:0;
+    transform:translateY(30px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible{
+    opacity:1;
+    transform:translateY(0);
+}
+
+h2{
+    font-family:'Fredoka', sans-serif;
+    color:var(--frosting-deep);
+    margin-bottom:30px;
+    text-align:center;
+    font-size:2rem;
+    position:relative;
+}
+h2::after{
+    content:"";
+    display:block;
+    width:70px;
+    height:4px;
+    background:var(--gold);
+    border-radius:4px;
+    margin:10px auto 0;
+}
+
+.hero{
+    text-align:center;
+    padding:50px 20px;
+    max-width:700px;
+    margin:0 auto;
+}
+
+.hero .logo-circle{
+    width:180px; height:180px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    background:linear-gradient(135deg, var(--frosting-light), var(--frosting));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:var(--shadow);
+    font-family:'Fredoka', sans-serif;
+    color:white;
+    font-size:1.4rem;
+    text-align:center;
+    padding:10px;
+    animation:float-logo 5s ease-in-out infinite;
+}
+@keyframes float-logo{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-10px); }
+}
+
+.hero p{ margin-top:15px; font-size:1.05rem; line-height:1.7; color:var(--cocoa-light); }
+
+/* ---------- Acordeones de productos ---------- */
+.productos-lista{
+    max-width:800px;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+details{
+    background:white;
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    transition:transform 0.3s ease, box-shadow 0.3s ease;
+    border:1px solid rgba(255,143,171,0.15);
+}
+
+details:hover{
+    transform:translateY(-3px);
+    box-shadow:0 14px 34px rgba(214,51,132,0.18);
+}
+
+summary{
+    font-family:'Fredoka', sans-serif;
+    font-size:1.15rem;
+    font-weight:500;
+    cursor:pointer;
+    color:var(--frosting-deep);
+    padding:18px 20px;
+    list-style:none;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+summary::-webkit-details-marker{ display:none; }
+
+summary .icon{
+    transition:transform 0.35s ease;
+    font-size:1.2rem;
+    color:var(--gold);
+}
+details[open] summary .icon{ transform:rotate(135deg); }
+
+.info{
+    max-height:0;
+    overflow:hidden;
+    padding:0 20px;
+    transition:max-height 0.5s ease, padding 0.5s ease;
+}
+details[open] .info{ max-height:600px; padding:0 20px 20px; }
+
+.info ul{ margin:10px 0 14px 20px; color:var(--cocoa-light); line-height:1.6; }
+.info .precio{ font-weight:700; color:var(--frosting-deep); font-size:1.05rem; }
+
+.sabor-select{
+    width:100%;
+    margin-top:6px;
+    margin-bottom:12px;
+    padding:9px 12px;
+    border-radius:8px;
+    border:1.5px solid var(--frosting-light);
+    background:var(--cream);
+    color:var(--cocoa);
+    font-family:'Poppins', sans-serif;
+    font-size:0.9rem;
+    cursor:pointer;
+}
+.sabor-select:focus{ outline:none; border-color:var(--frosting-deep); }
+
+.add-btn{
+    margin-top:10px;
+    background:var(--frosting);
+    color:white;
+    border:none;
+    padding:9px 18px;
+    border-radius:8px;
+    font-weight:600;
+    cursor:pointer;
+    transition:transform 0.2s ease, background 0.2s ease;
+}
+.add-btn:hover{ background:var(--frosting-deep); transform:translateY(-2px); }
+
+/* ---------- Galería ---------- */
+.galeria{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:24px;
+    max-width:1000px;
+    margin:0 auto;
+}
+
+.producto{
+    background:white;
+    width:230px;
+    padding:16px;
+    border-radius:14px;
+    text-align:center;
+    box-shadow:var(--shadow);
+    transition:transform 0.35s ease, box-shadow 0.35s ease;
+}
+.producto:hover{
+    transform:translateY(-8px) rotate(-1deg);
+    box-shadow:0 16px 32px rgba(214,51,132,0.2);
+}
+
+.producto .img-placeholder{
+    position:relative;
+    width:100%;
+    height:150px;
+    border-radius:10px;
+    background:linear-gradient(135deg, var(--cream-2), var(--frosting-light));
+    overflow:hidden;
+}
+
+.producto .img-placeholder img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.producto .img-placeholder .fallback-emoji{
+    display:none;
+    width:100%;
+    height:100%;
+    align-items:center;
+    justify-content:center;
+    font-size:38px;
+}
+
+.producto h3{
+    font-family:'Fredoka', sans-serif;
+    margin-top:10px;
+    color:var(--cocoa);
+}
+.producto p{ color:#999; font-size:0.9rem; margin-top:4px; }
+
+/* ---------- Contacto ---------- */
+.contacto{ text-align:center; }
+
+.boton{
+    display:inline-block;
+    margin:10px;
+    padding:14px 30px;
+    background:#25D366;
+    color:white;
+    text-decoration:none;
+    border-radius:12px;
+    font-weight:700;
+    transition:transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow:0 8px 20px rgba(37,211,102,0.3);
+}
+.boton:hover{ transform:scale(1.06); box-shadow:0 10px 26px rgba(37,211,102,0.45); }
+
+.info-contacto{ margin-top:20px; color:var(--cocoa-light); line-height:1.8; }
+
+footer{
+    background:var(--frosting);
+    color:white;
+    text-align:center;
+    padding:24px;
+    font-size:0.9rem;
+}
+
+/* ---------- Chatbot ---------- */
+.chat-toggle{
+    position:fixed;
+    bottom:26px;
+    right:100px;
+    background:var(--cocoa);
+    color:white;
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:26px;
+    box-shadow:0 8px 20px rgba(107,66,38,0.4);
+    cursor:pointer;
+    z-index:1000;
+    border:none;
+    transition:transform 0.25s ease;
+}
+.chat-toggle:hover{ transform:scale(1.08); }
+
+.chat-panel{
+    position:fixed;
+    bottom:96px;
+    right:26px;
+    width:320px;
+    max-width:86vw;
+    height:420px;
+    background:white;
+    border-radius:16px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.2);
+    z-index:1100;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    transform:scale(0.9) translateY(20px);
+    opacity:0;
+    pointer-events:none;
+    transition:all 0.3s ease;
+}
+.chat-panel.open{
+    transform:scale(1) translateY(0);
+    opacity:1;
+    pointer-events:auto;
+}
+
+.chat-header{
+    background:linear-gradient(135deg, var(--frosting), var(--frosting-deep));
+    color:white;
+    padding:14px 18px;
+    font-family:'Fredoka', sans-serif;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.chat-header button{ background:none; border:none; color:white; font-size:20px; cursor:pointer; }
+
+#chat-messages{
+    flex:1;
+    padding:14px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    background:var(--cream);
+}
+
+.msg{
+    padding:9px 13px;
+    border-radius:12px;
+    font-size:0.88rem;
+    max-width:80%;
+    line-height:1.4;
+    animation:pop-in 0.25s ease;
+}
+.msg.bot{ background:white; box-shadow:0 2px 8px rgba(0,0,0,0.06); align-self:flex-start; }
+.msg.user{ background:var(--frosting-light); color:white; align-self:flex-end; }
+
+.chat-quick{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    padding:0 14px 10px;
+    background:var(--cream);
+}
+.chat-quick button{
+    background:white;
+    border:1px solid var(--frosting-light);
+    color:var(--frosting-deep);
+    border-radius:16px;
+    padding:6px 12px;
+    font-size:0.78rem;
+    cursor:pointer;
+    transition:background 0.2s ease;
+}
+.chat-quick button:hover{ background:var(--frosting-light); color:white; }
+
+.chat-input{
+    display:flex;
+    border-top:1px solid #eee;
+}
+.chat-input input{
+    flex:1;
+    border:none;
+    padding:12px;
+    font-family:'Poppins', sans-serif;
+    font-size:0.88rem;
+    outline:none;
+}
+.chat-input button{
+    background:var(--frosting-deep);
+    color:white;
+    border:none;
+    padding:0 18px;
+    cursor:pointer;
+}
+
+@media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+}
+
+@media (max-width:480px){
+    .chat-toggle{ right:20px; bottom:96px; }
+    .cart-toggle{ right:20px; bottom:26px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sprinkle" style="top:12%; left:6%;">🍬</div>
+<div class="sprinkle" style="top:40%; left:90%; animation-delay:2s;">✨</div>
+<div class="sprinkle" style="top:70%; left:8%; animation-delay:4s;">🧁</div>
+<div class="sprinkle" style="top:85%; left:80%; animation-delay:1s;">🍭</div>
+
+<header>
+    <h1>Sweet Students</h1>
+    <p>Repostería personalizada para el ambiente escolar</p>
+</header>
+
+<nav>
+    <a href="#inicio">Inicio</a>
+    <a href="#productos">Productos</a>
+    <a href="#galeria">Galería</a>
+    <a href="#contacto">Contacto</a>
+</nav>
+
+<section id="inicio" class="hero reveal">
+    <div class="logo-circle">Sweet<br>Students</div>
+    <p>
+        Bienvenidos a Sweet Students. Elaboramos deliciosos postres
+        personalizados para estudiantes, actividades escolares y celebraciones,
+        con ingredientes frescos y mucho cariño casero.
+    </p>
+</section>
+
+<section id="productos">
+    <h2 class="reveal">Nuestros Productos</h2>
+
+    <div class="productos-lista">
+
+        <details>
+            <summary>Queques <span class="icon">✚</span></summary>
+            <div class="info">
+                <p>Queques suaves y esponjosos, horneados el mismo día.</p>
+                <ul>
+                    <li>Vainilla clásico</li>
+                    <li>Chocolate</li>
+                </ul>
+                <p class="precio">Desde ₡8.000</p>
+                <label for="sabor-1">Elige el sabor:</label>
+                <select class="sabor-select" id="sabor-1">
+                    <option value="Vainilla clásico">Vainilla clásico</option>
+                    <option value="Chocolate">Chocolate</option>
+                </select>
+                <button class="add-btn" onclick="addToCart(1, 'Queque', 8000, 'sabor-1')">Agregar al carrito</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Galletas <span class="icon">✚</span></summary>
+            <div class="info">
+                <p>Galletas crocantes por fuera y suaves por dentro, perfectas para compartir entre clases.</p>
+                <ul>
+                    <li>Chispas de chocolate</li>
+                    <li>Mantequilla de maní</li>
+                    <li>Doble chocolate</li>
+                </ul>
+                <p class="precio">Desde ₡800 c/u</p>
+                <label for="sabor-2">Elige el sabor:</label>
+                <select class="sabor-select" id="sabor-2">
+                    <option value="Chispas de chocolate">Chispas de chocolate</option>
+                    <option value="Mantequilla de maní">Mantequilla de maní</option>
+                    <option value="Doble chocolate">Doble chocolate</option>
+                </select>
+                <button class="add-btn" onclick="addToCart(2, 'Galletas', 800, 'sabor-2')">Agregar al carrito</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Muffins <span class="icon">✚</span></summary>
+            <div class="info">
+                <p>Muffins caseros horneados en porciones individuales.</p>
+                <ul>
+                    <li>Chocolate</li>
+                    <li>Banano y nuez</li>
+                </ul>
+                <p class="precio">Desde ₡1.500</p>
+                <label for="sabor-3">Elige el sabor:</label>
+                <select class="sabor-select" id="sabor-3">
+                    <option value="Chocolate">Chocolate</option>
+                    <option value="Banano y nuez">Banano y nuez</option>
+                </select>
+                <button class="add-btn" onclick="addToCart(3, 'Muffin', 1500, 'sabor-3')">Agregar al carrito</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Cupcakes <span class="icon">✚</span></summary>
+            <div class="info">
+                <p>Cupcakes decorados a mano.</p>
+                <ul>
+                    <li>Vainilla con frosting de fresa</li>
+                    <li>Chocolate con frosting de vainilla</li>
+                </ul>
+                <p class="precio">Desde ₡1.800</p>
+                <label for="sabor-5">Elige el sabor:</label>
+                <select class="sabor-select" id="sabor-5">
+                    <option value="Vainilla con frosting de fresa">Vainilla con frosting de fresa</option>
+                    <option value="Chocolate con frosting de vainilla">Chocolate con frosting de vainilla</option>
+                </select>
+                <button class="add-btn" onclick="addToCart(5, 'Cupcake', 1800, 'sabor-5')">Agregar al carrito</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Brownies <span class="icon">✚</span></summary>
+            <div class="info">
+                <p>Brownies húmedos y con mucho chocolate, en presentación de dos unidades.</p>
+                <ul>
+                    <li>Clásico</li>
+                    <li>Con nueces</li>
+                </ul>
+                <p class="precio">Desde ₡1.700</p>
+                <label for="sabor-6">Elige el sabor:</label>
+                <select class="sabor-select" id="sabor-6">
+                    <option value="Clásico">Clásico</option>
+                    <option value="Con nueces">Con nueces</option>
+                </select>
+                <button class="add-btn" onclick="addToCart(6, 'Brownie', 1700, 'sabor-6')">Agregar al carrito</button>
+            </div>
+        </details>
+
+    </div>
+</section>
+
+<section id="galeria">
+    <h2 class="reveal">Galería</h2>
+
+    <div class="galeria reveal">
+
+        <div class="producto">
+            <div class="img-placeholder">
+                <img src="qqq.jpeg" alt="Queques" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="fallback-emoji">🧁</span>
+            </div>
+            <h3>Queques</h3>
+            <p>Imagen de ejemplo</p>
+        </div>
+
+        <div class="producto">
+            <div class="img-placeholder">
+                <img src="pexels-noon-35401853.jpg" alt="Galletas" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="fallback-emoji">🍪</span>
+            </div>
+            <h3>Galletas</h3>
+            <p>Imagen de ejemplo</p>
+        </div>
+
+        <div class="producto">
+            <div class="img-placeholder">
+                <img src="muf.jpg" alt="Muffins" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="fallback-emoji">🧺</span>
+            </div>
+            <h3>Muffins</h3>
+            <p>Imagen de ejemplo</p>
+        </div>
+
+        <div class="producto">
+            <div class="img-placeholder">
+                <img src="cc.jpg" alt="Cupcakes" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="fallback-emoji">🧁</span>
+            </div>
+            <h3>Cupcakes</h3>
+            <p>Imagen de ejemplo</p>
+        </div>
+
+    </div>
+</section>
+
+<section id="contacto" class="contacto reveal">
+    <h2>Contáctanos</h2>
+
+    <!-- BOTON DE TELEFONO CONTACTO -->
+    <a class="boton" href="https://wa.me/50685815410" target="_blank">
+        Pedir por WhatsApp
+    </a>
+
+    <div class="info-contacto">
+        <p>Horario: 7:00am - 3:00pm</p>
+        <p>Ubicación: Solo se entrega en el colegio</p>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 Sweet Students | Repostería Escolar</p>
+</footer>
+
+<!-- ---------- Carrito ---------- -->
+<div class="overlay" id="overlay"></div>
+
+<button class="cart-toggle" id="cartToggle">
+    🛒
+    <span class="cart-badge" id="cartBadge">0</span>
+</button>
+
+<div class="cart-panel" id="cartPanel">
+    <h3>Tu Carrito <button class="cart-close" id="cartClose">&times;</button></h3>
+    <div id="cart-items">
+        <p class="cart-empty" id="cartEmptyMsg">Tu carrito está vacío 🍰</p>
+    </div>
+    <div class="cart-total">
+        <span>Total:</span>
+        <span id="cartTotal">₡0</span>
+    </div>
+    <button class="cart-checkout" id="checkoutBtn" disabled>Confirmar por WhatsApp</button>
+</div>
+
+<!-- ---------- Chatbot ---------- -->
+<button class="chat-toggle" id="chatToggle">💬</button>
+
+<div class="chat-panel" id="chatPanel">
+    <div class="chat-header">
+        <span>Asistente Sweet Students</span>
+        <button id="chatClose">&times;</button>
+    </div>
+    <div id="chat-messages"></div>
+    <div class="chat-quick">
+        <button data-q="horario">Horario</button>
+        <button data-q="precios">Precios</button>
+        <button data-q="pedido">Cómo pedir</button>
+        <button data-q="ubicacion">Ubicación</button>
+    </div>
+    <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Escribe tu pregunta...">
+        <button id="chatSend">➤</button>
+    </div>
+</div>
+
+<!-- =========================================================
+     CONEXIÓN AL BACKEND PROPIO (PHP + SQLite)
+     El HTML le pide los pedidos a api/pedidos.php, que los guarda en
+     db/PROYECTO_ROY.db. Si subes la carpeta "api" a otra ruta o dominio,
+     actualiza API_BASE.
+     ========================================================= -->
+<script>
+const API_BASE = 'api'; // ej: 'api' si api/ está junto a este HTML, o 'https://tudominio.com/api'
+</script>
+
+<script>
+/* ---------- Animación al hacer scroll ---------- */
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+        if(e.isIntersecting) e.target.classList.add('visible');
+    });
+}, { threshold:0.15 });
+revealEls.forEach(el=>observer.observe(el));
+
+/* ---------- Carrito ---------- */
+let cart = [];
+
+function addToCart(idProducto, name, price, saborSelectId){
+    let sabor = null;
+    if(saborSelectId){
+        const select = document.getElementById(saborSelectId);
+        if(select) sabor = select.value;
+    }
+
+    // Cada combinación producto + sabor es una línea distinta del carrito
+    const cartKey = idProducto + '|' + (sabor || '');
+    const existing = cart.find(i=>i.cartKey===cartKey);
+    if(existing){ existing.qty++; }
+    else{ cart.push({cartKey, idProducto, name, price, sabor, qty:1}); }
+    renderCart();
+    openCart();
+}
+
+function changeQty(cartKey, delta){
+    const item = cart.find(i=>i.cartKey===cartKey);
+    if(!item) return;
+    item.qty += delta;
+    if(item.qty<=0) cart = cart.filter(i=>i.cartKey!==cartKey);
+    renderCart();
+}
+
+function renderCart(){
+    const container = document.getElementById('cart-items');
+    const badge = document.getElementById('cartBadge');
+    const totalEl = document.getElementById('cartTotal');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+
+    container.innerHTML = '';
+    if(cart.length===0){
+        container.innerHTML = '<p class="cart-empty">Tu carrito está vacío 🍰</p>';
+        checkoutBtn.disabled = true;
+    } else {
+        cart.forEach(item=>{
+            const div = document.createElement('div');
+            div.className = 'cart-item';
+            div.innerHTML = `
+                <div class="cart-item-info">
+                    <strong>${item.name}</strong>${item.sabor ? ' - ' + item.sabor : ''}<br>
+                    ₡${item.price.toLocaleString()} c/u
+                </div>
+                <div class="cart-item-controls">
+                    <button onclick="changeQty('${item.cartKey}', -1)">-</button>
+                    <span>${item.qty}</span>
+                    <button onclick="changeQty('${item.cartKey}', 1)">+</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+        checkoutBtn.disabled = false;
+    }
+
+    const totalItems = cart.reduce((a,i)=>a+i.qty,0);
+    const totalPrice = cart.reduce((a,i)=>a+i.qty*i.price,0);
+    badge.textContent = totalItems;
+    totalEl.textContent = '₡' + totalPrice.toLocaleString();
+}
+
+function openCart(){
+    document.getElementById('cartPanel').classList.add('open');
+    document.getElementById('overlay').classList.add('show');
+}
+function closeCart(){
+    document.getElementById('cartPanel').classList.remove('open');
+    document.getElementById('overlay').classList.remove('show');
+}
+
+document.getElementById('cartToggle').addEventListener('click', openCart);
+document.getElementById('cartClose').addEventListener('click', closeCart);
+document.getElementById('overlay').addEventListener('click', ()=>{
+    closeCart();
+    closeChat();
+});
+
+/* ---------- Guardar el pedido en la base de datos (backend PHP propio) ---------- */
+async function guardarPedidoEnBD(cartItems){
+    const payload = {
+        items: cartItems.map(item => ({
+            id_producto: item.idProducto,
+            sabor: item.sabor || null,
+            cantidad: item.qty
+        }))
+    };
+
+    try {
+        const resp = await fetch(`${API_BASE}/pedidos.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await resp.json();
+        if(!resp.ok || !data.ok){
+            console.error('Error guardando el pedido:', data.error || resp.statusText);
+        }
+        return data;
+    } catch (err) {
+        console.error('No se pudo conectar con el servidor:', err);
+        return null;
+    }
+}
+
+document.getElementById('checkoutBtn').addEventListener('click', async ()=>{
+    if(cart.length===0) return;
+
+    const total = cart.reduce((a,i)=>a+i.qty*i.price,0);
+
+    // Guarda el pedido en la base de datos antes de abrir WhatsApp
+    await guardarPedidoEnBD(cart);
+
+    let msg = 'Hola! Quiero hacer el siguiente pedido en Sweet Students:%0A';
+    cart.forEach(item=>{
+        const nombreLinea = item.sabor ? `${item.name} (${item.sabor})` : item.name;
+        msg += `- ${nombreLinea} x${item.qty} (₡${(item.price*item.qty).toLocaleString()})%0A`;
+    });
+    msg += `%0ATotal: ₡${total.toLocaleString()}`;
+    window.open(`https://wa.me/50685815410?text=${msg}`, '_blank');
+});
+
+/* ---------- Chatbot ---------- */
+const chatPanel = document.getElementById('chatPanel');
+const chatMessages = document.getElementById('chat-messages');
+
+function openChat(){
+    chatPanel.classList.add('open');
+    if(chatMessages.children.length===0){
+        botSay('¡Hola! Soy el asistente de Sweet Students 🧁 ¿En qué te puedo ayudar? Puedes preguntarme por horarios, precios, cómo pedir o la ubicación.');
+    }
+}
+function closeChat(){ chatPanel.classList.remove('open'); }
+
+document.getElementById('chatToggle').addEventListener('click', openChat);
+document.getElementById('chatClose').addEventListener('click', closeChat);
+
+function botSay(text){
+    const div = document.createElement('div');
+    div.className = 'msg bot';
+    div.textContent = text;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+function userSay(text){
+    const div = document.createElement('div');
+    div.className = 'msg user';
+    div.textContent = text;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+const respuestas = [
+    { keys:['horario','hora','abren','cierran'], text:'Nuestro horario de atención es de 7:00am a 3:00pm.' },
+    { keys:['precio','cuesta','cuanto','valor'], text:'Los queques desde ₡8.000, galletas desde ₡800, muffins desde ₡1.500, cupcakes desde ₡1.800 y brownies desde ₡1.700. Revisa la sección de Productos para más detalles.' },
+    { keys:['pedido','pedir','ordenar','comprar'], text:'Puedes elegir el sabor de cada producto y agregarlo al carrito con el botón "Agregar al carrito", luego confirmar tu pedido por WhatsApp desde el ícono del carrito.' },
+    { keys:['ubicacion','ubicación','donde','entregan','direccion'], text:'La entrega es únicamente dentro del colegio.' },
+    { keys:['sabor','sabores'], text:'Cada producto tiene un menú desplegable para elegir el sabor antes de agregarlo al carrito, dentro de la sección de Productos.' },
+    { keys:['contacto','whatsapp','telefono','teléfono'], text:'Puedes escribirnos directamente por WhatsApp usando el botón verde en la sección de Contacto.' },
+    { keys:['gracias'], text:'¡Con mucho gusto! 🧁 Cualquier otra duda aquí estoy.' }
+];
+
+function botReply(userText){
+    const lower = userText.toLowerCase();
+    const match = respuestas.find(r=>r.keys.some(k=>lower.includes(k)));
+    if(match) return match.text;
+    return 'No estoy segura de haber entendido 😅 Puedes preguntarme por horarios, precios, cómo pedir o la ubicación, o escribirnos directo por WhatsApp.';
+}
+
+function handleUserMessage(text){
+    if(!text.trim()) return;
+    userSay(text);
+    setTimeout(()=>{ botSay(botReply(text)); }, 400);
+}
+
+document.getElementById('chatSend').addEventListener('click', ()=>{
+    const input = document.getElementById('chatInput');
+    handleUserMessage(input.value);
+    input.value = '';
+});
+
+document.getElementById('chatInput').addEventListener('keypress', (e)=>{
+    if(e.key==='Enter'){
+        handleUserMessage(e.target.value);
+        e.target.value = '';
+    }
+});
+
+document.querySelectorAll('.chat-quick button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+        const q = btn.getAttribute('data-q');
+        const labels = { horario:'¿Cuál es su horario?', precios:'¿Cuáles son los precios?', pedido:'¿Cómo hago un pedido?', ubicacion:'¿Dónde entregan?' };
+        handleUserMessage(labels[q]);
+    });
+});
+
+renderCart();
+</script>
+
+</body>
+</html>
